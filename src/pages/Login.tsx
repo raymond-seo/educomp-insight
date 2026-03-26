@@ -4,17 +4,17 @@ import { BarChart3, User, Loader2 } from 'lucide-react';
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       setIsLoading(true);
-      // Supabase 구글 로그인 실행
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          // 로그인 완료 후 원래 화면으로 돌아오도록 설정
-          redirectTo: window.location.origin
-        }
+      // Supabase 이메일 로그인 실행
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
       });
       
       if (error) throw error;
@@ -42,19 +42,39 @@ export default function Login() {
           팀 협업을 위해 사내 구글 계정으로 로그인해 주세요.
         </p>
         
-        {/* 로그인 버튼 */}
-        <button 
-          onClick={handleLogin}
-          disabled={isLoading}
-          className="w-full py-4 px-6 bg-zinc-900 text-white rounded-2xl font-semibold hover:bg-zinc-800 transition-all flex items-center justify-center gap-3 shadow-lg shadow-zinc-900/10 active:scale-95 disabled:opacity-50"
-        >
-          {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <User className="w-5 h-5" />
-          )}
-          {isLoading ? '로그인 처리 중...' : 'Google 계정으로 시작하기'}
-        </button>
+       {/* 로그인 양식 */}
+        <form onSubmit={handleLogin} className="space-y-4 text-left">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Email Address</label>
+            <input 
+              type="email" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@company.com" 
+              className="w-full p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-zinc-900 transition-all" 
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Password</label>
+            <input 
+              type="password" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••" 
+              className="w-full p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-zinc-900 transition-all" 
+            />
+          </div>
+          <button 
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-5 bg-zinc-900 text-white rounded-2xl font-bold shadow-xl shadow-zinc-900/10 hover:bg-zinc-800 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <User className="w-5 h-5" />}
+            {isLoading ? '로그인 중...' : '로그인'}
+          </button>
+        </form>
         
         {/* 하단 안내 문구 */}
         <p className="mt-8 text-xs text-zinc-400">

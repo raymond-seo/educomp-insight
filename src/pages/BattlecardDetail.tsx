@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { 
   ArrowLeft, Globe, Target, Lightbulb, 
   AlertTriangle, MessageSquare, ShieldCheck, 
-  ExternalLink, Calendar, User, TrendingUp
+  ExternalLink, Calendar, TrendingUp
 } from 'lucide-react';
 
 export default function BattlecardDetail() {
