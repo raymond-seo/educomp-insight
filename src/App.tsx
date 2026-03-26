@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Battlecards from './pages/Battlecards';
+import BattlecardDetail from './pages/BattlecardDetail'; // 추가
 
 function App() {
   const [session, setSession] = useState<any>(null);
@@ -45,6 +46,7 @@ function App() {
         <>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/battlecards" element={<Battlecards />} />
+          <Route path="/battlecards/:id" element={<BattlecardDetail />} /> {/* 추가 */}
           <Route path="*" element={<Dashboard />} />
         </>
       )}

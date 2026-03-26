@@ -124,7 +124,11 @@ export default function Battlecards() {
             // 데이터가 있을 때 보여주는 배틀카드 그리드
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {competitors.map((comp) => (
-                <div key={comp.id} className="bg-white rounded-[32px] p-8 border border-zinc-200 shadow-sm hover:border-blue-600 hover:shadow-xl transition-all group cursor-pointer flex flex-col h-full">
+                <div 
+                    key={comp.id} 
+                    onClick={() => navigate(`/battlecards/${comp.id}`)} // 클릭 시 이동 기능 추가
+                    className="bg-white rounded-[32px] p-8 border border-zinc-200 shadow-sm hover:border-blue-600 hover:shadow-xl transition-all group cursor-pointer flex flex-col h-full"
+                >
                   <div className="flex items-center gap-5 mb-8">
                     <div className="w-16 h-16 bg-zinc-50 rounded-2xl overflow-hidden border border-zinc-100 p-2 shrink-0">
                       {comp.logo_url ? (
