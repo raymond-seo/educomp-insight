@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { 
   LayoutDashboard, LogOut, Swords, Activity, 
-  Plus, Search, ExternalLink, Clock, Tag, AlertCircle 
+  Plus, ExternalLink, Clock, Tag, AlertCircle 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
