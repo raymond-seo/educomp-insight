@@ -1,17 +1,9 @@
-/* Inter 폰트를 구글폰트에서 가져옵니다. */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
 
-/* Tailwind CSS 엔진 가동 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Inter 폰트 가져오기 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
 
-/* 전체 화면의 배경색과 기본 폰트를 설정합니다. */
 body {
   @apply bg-zinc-50 text-zinc-900 antialiased;
-}
-
-/* 폰트 모양을 더 깔끔하게 다듬습니다. */
-body {
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: 'Inter', sans-serif;
 }
