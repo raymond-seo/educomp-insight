@@ -28,44 +28,43 @@ export default function CompetitorModal({ onClose, onSuccess }: { onClose: () =>
     
     setSaving(true);
     try {
+      // 현재 로그인한 사용자 정보 가져오기
       const { data: { user } } = await supabase.auth.getUser();
       
+      // DB 구조에 딱 맞는 데이터만 추려냅니다.
       const newCompetitor = {
         name: name.trim(),
-        logo_url: logoUrl.trim(),
+        logo_url: logoUrl.trim() || `https://logo.clearbit.com/${website.replace(/^https?:\/\//, '')}`,
         website: website.trim(),
         description: description.trim(),
         target_audience: targetAudience.trim(),
         business_model: businessModel.trim(),
-        // 태그는 쉼표로 구분해서 배열 형태로 변환
         tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag), 
-        
         how_to_win: howToWin.trim(),
         key_differentiators: keyDifferentiators.trim(),
         comp_weaknesses: compWeaknesses.trim(),
         talk_tracks: talkTracks.trim(),
-        
-        created_at: new Date(),
-        updated_at: new Date(),
-        updated_by: user?.id,
-        created_by: user?.id
+        // 아래 두 항목은 위 SQL을 실행했다면 이제 정상 작동합니다.
+        created_by: user?.id,
+        updated_by: user?.id
       };
 
-      // Supabase 'competitors' 테이블에 데이터 넣기
       const { error } = await supabase.from('competitors').insert([newCompetitor]);
+      
       if (error) throw error;
 
-      alert('새로운 경쟁사가 성공적으로 등록되었습니다.');
-      onSuccess(); // 목록 다시 불러오기
-      onClose(); // 팝업창 닫기
-    } catch (error) {
+      alert('성공적으로 등록되었습니다!');
+      onSuccess();
+      onClose();
+    } catch (error: any) {
       console.error("Save failed", error);
-      alert('등록 중 에러가 발생했습니다. 담당자에게 문의하세요.');
+      // 에러 메시지를 좀 더 친절하게 출력합니다.
+      alert(`등록 실패: ${error.message || '데이터베이스 설정을 확인해주세요.'}`);
     } finally {
       setSaving(false);
     }
   };
-
+  
   return (
     // 팝업창 배경 (어둡게 처리)
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6 overflow-y-auto">
