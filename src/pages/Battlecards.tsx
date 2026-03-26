@@ -60,7 +60,10 @@ export default function Battlecards() {
             <LayoutDashboard className="w-4 h-4" />
             대시보드
           </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-100 rounded-xl text-sm font-bold transition-colors">
+          <button 
+            onClick={() => navigate('/feed')}
+            className="w-full flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-100 rounded-xl text-sm font-bold transition-colors"
+          >
             <Activity className="w-4 h-4" />
             인텔리전스 피드
           </button>

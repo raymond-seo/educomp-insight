@@ -4,7 +4,8 @@ import { supabase } from './lib/supabase';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Battlecards from './pages/Battlecards';
-import BattlecardDetail from './pages/BattlecardDetail'; // 추가
+import BattlecardDetail from './pages/BattlecardDetail';
+import Feed from './pages/Feed';
 
 function App() {
   const [session, setSession] = useState<any>(null);
@@ -45,8 +46,9 @@ function App() {
         /* 로그인이 성공했다면 메인 서비스 화면들을 연결합니다. */
         <>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/feed" element={<Feed />} /> {/* 추가 */}
           <Route path="/battlecards" element={<Battlecards />} />
-          <Route path="/battlecards/:id" element={<BattlecardDetail />} /> {/* 추가 */}
+          <Route path="/battlecards/:id" element={<BattlecardDetail />} />
           <Route path="*" element={<Dashboard />} />
         </>
       )}
