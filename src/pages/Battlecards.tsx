@@ -2,35 +2,40 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { LayoutDashboard, LogOut, Swords, Activity, Plus, Globe, ChevronRight, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import CompetitorModal from '../components/common/CompetitorModal';
 
 export default function Battlecards() {
   const [userName, setUserName] = useState('');
   const [competitors, setCompetitors] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false); // 팝업창 열림/닫힘 상태
   const navigate = useNavigate();
 
-  // 사용자 정보 및 경쟁사 데이터 불러오기
+  // 경쟁사 목록 데이터 불러오기 (성공 시 다시 불러오기 위해 별도 함수로 분리)
+  const fetchCompetitors = async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase
+      .from('competitors')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (!error && data) {
+      setCompetitors(data);
+    }
+    setIsLoading(false);
+  };
+
+  // 사용자 정보 가져오기 및 초기 데이터 불러오기
   useEffect(() => {
-    const fetchData = async () => {
-      // 1. 사용자 이름 가져오기
+    const fetchUserAndInitialData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUserName(user.user_metadata?.full_name || user.email?.split('@')[0] || '사용자');
       }
-
-      // 2. Supabase에서 경쟁사 목록 가져오기
-      const { data, error } = await supabase
-        .from('competitors')
-        .select('*')
-        .order('created_at', { ascending: false });
-        
-      if (!error && data) {
-        setCompetitors(data);
-      }
-      setIsLoading(false);
+      await fetchCompetitors(); // 초기 데이터 로딩
     };
     
-    fetchData();
+    fetchUserAndInitialData();
   }, []);
 
   const handleLogout = async () => {
@@ -87,7 +92,10 @@ export default function Battlecards() {
             <h2 className="text-2xl font-black tracking-tight mb-1">Competitive Battlecards</h2>
             <p className="text-xs font-bold text-zinc-500">영업 및 기획 전략 수립을 위한 핵심 비교 데이터</p>
           </div>
-          <button className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-colors active:scale-95">
+          <button 
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-colors active:scale-95"
+          >
             <Plus className="w-4 h-4" />
             새 경쟁사 등록
           </button>
@@ -162,8 +170,16 @@ export default function Battlecards() {
               ))}
             </div>
           )}
-        </div>
+       </div>
       </main>
+      
+      {/* 등록하기 팝업창 (모달) */}
+      {showAddModal && (
+        <CompetitorModal 
+          onClose={() => setShowAddModal(false)} // 닫기 버튼 눌렀을 때
+          onSuccess={fetchCompetitors} // 등록 성공 시 목록 다시 불러오기
+        />
+      )}
     </div>
   );
 }
